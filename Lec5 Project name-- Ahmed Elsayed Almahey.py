@@ -1,0 +1,214 @@
+#Name : Ahmed Elsayed Ibrahim Almahey
+
+
+'''
+
+------Library Management System------
+
+1-Add a new book to the library with details like name,
+ author, year, genre, and availability
+
+2-Update Book Availability by name (whether it's checked out or available)
+
+3-Delete Book by Year
+
+4-Print All books
+
+5-Exit
+'''
+'''
+you will keep the program running forever
+
+-Display the choices and user input from 1 to 5
+
+Book Class 
+holds the data like (name, author, year, genre, and availability)
+
+Book Manager Class 
+holds a list of books and has implementations for the menu options  
+
+FrontendMannager Class
+-print the menu, get a choice and call the Book Manager
+
+all data will be stored in a file
+
+# System Design For Project
+1. Book Class 
+store attributes for book -> name, author, year, genre, availability
+
+functionality
+display_information -> print book details
+to_dictionary -> convert object to dictionary for a json storage
+
+2. BookManager Class
+manages a list of books
+support CRUD operations -> create, read, update, delete 
+
+Implementation of file handling to store book data as a json file
+List_all_books() -> Display all book records 
+add_book() -> add new book to the list 
+delete_by_year() -> delete a book by year
+update_availability_by_name() -> update availability of a book by name
+save_to_file() -> save book data to file 
+load_from_file -> load book data from file
+exit_program -> exit the program
+
+3.FrontendManager Class
+Handle the user interface 
+Display menu and takes user input  
+calls appropriate method from BookManager
+
+File Handling 
+file name: books.json
+formate: json (list of books dictionary)
+'''
+
+import json
+# 1. Book Class 
+
+
+# store attributes for book -> name, author, year, genre, availability
+class book :
+    def __init__(self,name,author,year,genre,availability):
+        self.name = name
+        self.author = author 
+        self.year = year 
+        self.genre = genre
+        self.availability = availability
+
+# display_information -> print book details
+    def display_info(self):
+        print(f"Name: {self.name}, author: {self.author},Year: {self.year}, genre: {self.genre},availability: {self.availability}")
+
+# to_dictionary -> convert object to dictionary for a json storage
+    def to_dict(self):
+        return{
+             "name": self.name,
+             "author": self.author,
+             "year": self.year,
+             "genre": self.genre,
+             "availability": self.availability
+        }
+    
+# 2. BookManager Class
+# manages a list of books
+# support CRUD operations -> create, read, update, delete 
+
+# Implementation of file handling to store book data as a json file
+# List_all_books() -> Display all book records 
+# add_book() -> add new book to the list 
+# delete_by_year() -> delete a book by year
+# update_availability_by_name() -> update availability of a book by name
+# save_to_file() -> save book data to file 
+# load_from_file -> load book data from file
+# exit_program -> exit the program
+
+class bookManager :
+    def __init__(self):
+        self.books = []
+        self.file_path = "books.json"
+        self.load_from_file()
+
+    def add_book(self,name,author,year,genre,availability):
+        self.books.append(book(name,author,year,genre,availability))
+        self.save_to_file()
+        print(f"book: {name} added successfully")
+
+    def print_all_books(self):
+        if not self.books:
+            print("No, books found")
+        else:
+            for bk in self.books:
+                bk.display_info()
+
+    def update_av_by_name(self,name,new_av):
+        for bk in self.books:
+            if book.name == name :
+                book.availability = new_av
+                self.save_to_file()
+                print(f"book: {name} availability updated to {new_av}")
+            return
+        print("book wasn't found!")
+
+    def delete_by_year(self,year):
+            new_books =[]
+            for bk in self.books:
+                if book.year != year:
+                    new_books.append(bk)
+            self.books = new_books
+            self.save_to_file()
+            print(f"book with year {year} has deleted successfully ")
+    
+    def save_to_file(self):
+         book_list = []
+         for bk in self.books:
+             book_list.append(bk.to_dict())
+
+         with open(self.file_path,"w") as file:
+            json.dump(book_list,file)
+    
+    def load_from_file(self):
+         try:
+             with open(self.file_path,"r") as file:
+                  data = json.load(file)
+                  self.books = []
+                  for bk in data :
+                      self.books.append(book(bk["name"],bk["author"],bk["year"],bk["genre"],bk["availability"]))
+         except(FileNotFoundError,json.JSONDecodeError):
+             self.books = []
+
+# 3.FrontendManager Class
+# Handle the user interface 
+# Display menu and takes user input  
+# calls appropriate method from BookManager
+
+# File Handling 
+# file name: books.json
+# formate: json (list of books dictionary)
+
+class FrontendManager:
+    def __init__(self):
+        self.manager = bookManager()
+
+    def display_menu(self):
+        while True:
+            print("\n\tLibrary Management system\t\t")
+            print("1) Add new book: ")
+            print("2) Print all books: ")
+            print("3) Delete by year: ")
+            print("4) Update availability by name: ")
+            print("5) End the program | Exit ")
+
+            choice = input("Enter your choice: ")
+            if choice == "1":
+                name = input("Enter Name: ")
+                author = input("Enter author: ")
+                year = int(input("Enter year: "))
+                genre= input("Enter genre: ")
+                availability = input("Enter availability: ")
+                self.manger.add_book(name,author,year,genre,availability)
+            elif choice == "2":
+                self.manager.print_all_books()
+            elif choice =="3":
+                year = int(input("Enter year to delete: "))
+                self.manager.delete_by_year(year)
+            elif choice == "4":
+                name = input("Enter Name: ")
+                new_av = input("Enter new availability status: ")
+                self.manager.update_av_by_name(name,new_av)
+            elif choice =="5":
+                print("Exit program ... ")
+                break
+            else:
+                print("Invalid choice, Please try again ... ")
+    
+if __name__ == "__main__":
+    frontend=FrontendManager()
+    frontend.display_menu()
+
+
+#Name : Ahmed Elsayed Ibrahim Almahey
+
+
+
+    
